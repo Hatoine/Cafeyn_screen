@@ -12,9 +12,14 @@ import Foundation
 struct Category: Decodable {
     let id: String
     let name: Name
+    let subTopics: [Category]?
+    let parentIDS: [String]?
 }
 
 struct Name: Codable, Equatable {
     let raw: String
     let key: String
 }
+
+
+

@@ -22,17 +22,17 @@ enum LogType: String {
         case .info: 
             return "Fetching data from URL:"
         case .warning: 
-            return "Invalid response from server + 🚫 :"
+            return "Invalid response from server 🚫 :"
         case .error: 
-            return "Invalid URL + 🚫 :"
+            return "Invalid URL 🚫 :"
         case .success:
-            return "Data successfully decoded + ✅"
+            return "Data successfully decoded ✅"
         case.requestError:
-            return "Request failed with error + 🚫"
+            return "Request failed with error 🚫"
         case .noData:
-            return "No data received from server + 🚫"
+            return "No data received from server 🚫"
         case .decodingError:
-            return "Decoding error + 🚫"
+            return "Decoding error 🚫"
         }
     }
 }

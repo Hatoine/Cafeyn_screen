@@ -10,30 +10,40 @@ import SwiftUI
 struct CategoriesView: View {
     
     @StateObject private var viewModel: CategoriesViewModel
-    
-        init() {
-              let apiService = HTTPmanager()
-              let CategoriesRepository = CategoriesRepository(apiService: apiService)
-            _viewModel = StateObject(wrappedValue: CategoriesViewModel(categoriesRepositories: CategoriesRepository))
-          }
-    
     @State private var selectedInterests: [String] = []
+    @State private var isEditing = false // État pour gérer le mode édition
+    
+    init() {
+        let apiService = HTTPmanager()
+        let categoriesRepository = CategoriesRepository(apiService: apiService)
+        _viewModel = StateObject(wrappedValue: CategoriesViewModel(categoriesRepositories: categoriesRepository))
+    }
     
     var body: some View {
-        
-        let categoriesToDiscover: [String] = viewModel.categories?.map{$0.name.raw} ?? []
-        
         NavigationView {
-           
             VStack {
-                
-                // Liste comprenant les deux sections
                 List {
-                    // Première section : Centres d'intérêt sélectionnés
-                    Section(header: Text("Organisez vos centres d’intérêt")
+                    // Première section : Centres d'intérêt sélectionnés (provenant des UserDefaults)
+                    Section(
+                        header: HStack { // Personnalisation du header avec un HStack
+                            Text("Organisez vos centres d’intérêt")
                                 .font(.headline)
                                 .padding(.vertical, 8)
                                 .frame(maxWidth: .infinity, alignment: .leading)
+                            Button(action: {
+                                isEditing.toggle()
+                            }) {
+                                if isEditing {
+                                    Image(systemName: "square.and.pencil")
+                                        .font(.system(size: 20))
+                                        .foregroundColor(.red)
+                                } else {
+                                    Image(systemName: "square.and.pencil")
+                                        .font(.system(size: 20))
+                                        .foregroundColor(.gray)
+                                }
+                            }
+                        }
                     ) {
                         if selectedInterests.isEmpty {
                             VStack(spacing: 8) {
@@ -53,24 +63,25 @@ struct CategoriesView: View {
                                 RoundedRectangle(cornerRadius: 10)
                                     .stroke(Color.gray, lineWidth: 1)
                                     .background(Color.white)
-                                    
                             )
                             .padding()
                         } else {
-                            // Affichage des centres d'intérêts sélectionnés
+                            // Affichage des centres d'intérêts sélectionnés (provenant des UserDefaults)
                             ForEach(selectedInterests, id: \.self) { interest in
                                 InterestRow(interest: interest, isSelected: true) {
-                                    removeFromSelected(interest: interest)
-                                }
+                                    removeFromSelected(interest: interest) // Retirer l'intérêt
+                                }.transition(.move(edge: .trailing))
+                            }
+                            .onMove { from, to in
+                                selectedInterests.move(fromOffsets: from, toOffset: to)
                             }
                         }
                     }.listRowBackground(Color(red: 1, green: 0.9918245673, blue: 0.974753201))
                     
                     // Seconde section : Centres d'intérêt à découvrir
                     Section(header: Text("À découvrir")
-                                .font(.headline)
-                                .padding(.top, 20)
-                                
+                        .font(.headline)
+                        .padding(.top, 20)
                     ) {
                         if viewModel.isLoading {
                             ProgressView("Chargement des catégories")
@@ -84,7 +95,6 @@ struct CategoriesView: View {
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
                                     .multilineTextAlignment(.center)
-                                  
                             }
                             .padding()
                             .background(
@@ -92,39 +102,45 @@ struct CategoriesView: View {
                                     .stroke(Color.gray, lineWidth: 1)
                             )
                         } else {
-                            ForEach(categoriesToDiscover.filter { !selectedInterests.contains($0) }, id: \.self) { interest in
+                            // Affichage des catégories et sous-catégories
+                            ForEach(viewModel.categories?.filter { !selectedInterests.contains($0) } ?? [], id: \.self) { interest in
                                 InterestRow(interest: interest, isSelected: false) {
-                                    toggleInterest(interest: interest)
-                                       
+                                    toggleInterest(interest: interest) // Ajouter ou retirer l'intérêt
                                 }.listRowBackground(Color(red: 1, green: 0.9918245673, blue: 0.974753201))
-                                  
                             }
                         }
-                        // Utilisation de .filter pour exclure les éléments déjà sélectionnés
-                       
+                    }.task {
+                        viewModel.fetchCategories()
                     }
-                }.task {
-                    viewModel.fetchCategories()
+                    .listStyle(InsetGroupedListStyle())
                 }
-                .listStyle(InsetGroupedListStyle())
-            }
-            .navigationBarItems(
-                leading: Button("Annuler") {
-                    selectedInterests.removeAll()
-                }.foregroundStyle(.black),
-                trailing: Button("Enregistrer") {
-                    // Action pour enregistrer
-                }.foregroundStyle(.black)
-                   
-            )
-            
-            .toolbar {
-                ToolbarItem(placement: .principal) {
-                    Text("Centres d’intérêt")
-                        .font(.headline)
-                        .foregroundColor(.primary)
+                .navigationBarItems(
+                    leading: Button("Annuler") {
+                        clearSelectedInterests() // Effacer tout
+                    }.foregroundStyle(.black),
+                    trailing: Button("Enregistrer") {
+                        saveSelectedInterests() // Sauvegarder
+                    }.foregroundStyle(.black)
+                )
+                .environment(\.editMode, isEditing ? .constant(.active) : .constant(.inactive)) // Gérer l'état d'édition
+                .toolbar {
+                    ToolbarItem(placement: .principal) {
+                        Text("Centres d’intérêt")
+                            .font(.headline)
+                            .foregroundColor(.primary)
+                    }
                 }
             }
+            .onAppear {
+                loadSelectedInterests() // Charger les centres d'intérêts depuis UserDefaults quand la vue apparaît
+            }
+        }
+    }
+    
+    // Fonction pour charger les centres d'intérêt depuis les UserDefaults
+    private func loadSelectedInterests() {
+        if let savedInterests = UserDefaults.standard.array(forKey: "selectedInterests") as? [String] {
+            selectedInterests = savedInterests
         }
     }
     
@@ -137,11 +153,25 @@ struct CategoriesView: View {
             // Ajouter à la liste des sélectionnés
             selectedInterests.append(interest)
         }
+        saveSelectedInterests() // Sauvegarder les changements après modification
     }
     
     // Fonction pour retirer un intérêt de la liste des sélectionnés
     private func removeFromSelected(interest: String) {
+        // Retirer de la liste des centres d'intérêt sélectionnés
         selectedInterests.removeAll { $0 == interest }
+        saveSelectedInterests() // Mettre à jour UserDefaults immédiatement
+    }
+    
+    // Fonction pour sauvegarder les centres d'intérêts dans les UserDefaults
+    private func saveSelectedInterests() {
+        UserDefaults.standard.set(selectedInterests, forKey: "selectedInterests")
+    }
+    
+    // Fonction pour effacer la liste des centres d'intérêt et les UserDefaults
+    private func clearSelectedInterests() {
+        selectedInterests.removeAll() // Vider la liste des centres d'intérêt
+        UserDefaults.standard.removeObject(forKey: "selectedInterests") // Supprimer des UserDefaults
     }
 }
 
@@ -164,13 +194,8 @@ struct InterestRow: View {
     }
 }
 
-struct InterestSelectionView_Previews: PreviewProvider {
+struct CategoriesView_Previews: PreviewProvider {
     static var previews: some View {
         CategoriesView()
     }
-}
-
-
-#Preview {
-    CategoriesView()
 }
