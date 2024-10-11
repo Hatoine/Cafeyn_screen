@@ -10,8 +10,10 @@ import SwiftUI
 struct CategoriesView: View {
     
     @StateObject private var viewModel: CategoriesViewModel
-    @State private var selectedInterests: [String] = []
-    @State private var isEditing = false // État pour gérer le mode édition
+    @State private var selectedInterests: [Name] = []
+    @State private var isEditing = false
+    private var userDefaultsKey: String = "selectedInterests"
+    @State var idsToSave = [String]()
     
     init() {
         let apiService = HTTPmanager()
@@ -23,9 +25,9 @@ struct CategoriesView: View {
         NavigationView {
             VStack {
                 List {
-                    // Première section : Centres d'intérêt sélectionnés (provenant des UserDefaults)
+                    // Première section : Centres d'intérêt sélectionnés
                     Section(
-                        header: HStack { // Personnalisation du header avec un HStack
+                        header: HStack {
                             Text("Organisez vos centres d’intérêt")
                                 .font(.headline)
                                 .padding(.vertical, 8)
@@ -33,15 +35,9 @@ struct CategoriesView: View {
                             Button(action: {
                                 isEditing.toggle()
                             }) {
-                                if isEditing {
-                                    Image(systemName: "square.and.pencil")
-                                        .font(.system(size: 20))
-                                        .foregroundColor(.red)
-                                } else {
-                                    Image(systemName: "square.and.pencil")
-                                        .font(.system(size: 20))
-                                        .foregroundColor(.gray)
-                                }
+                                Image(systemName: "square.and.pencil")
+                                    .font(.system(size: 20))
+                                    .foregroundColor(isEditing ? .red : .black)
                             }
                         }
                     ) {
@@ -66,11 +62,12 @@ struct CategoriesView: View {
                             )
                             .padding()
                         } else {
-                            // Affichage des centres d'intérêts sélectionnés (provenant des UserDefaults)
+                            // Affichage des centres d'intérêts sélectionnés
                             ForEach(selectedInterests, id: \.self) { interest in
-                                InterestRow(interest: interest, isSelected: true) {
-                                    removeFromSelected(interest: interest) // Retirer l'intérêt
-                                }.transition(.move(edge: .trailing))
+                                InterestRow(interest: interest.raw, isSelected: true) {
+                                    removeFromSelected(interest: interest)
+                                }
+                                .transition(.scale)
                             }
                             .onMove { from, to in
                                 selectedInterests.move(fromOffsets: from, toOffset: to)
@@ -102,11 +99,23 @@ struct CategoriesView: View {
                                     .stroke(Color.gray, lineWidth: 1)
                             )
                         } else {
-                            // Affichage des catégories et sous-catégories
-                            ForEach(viewModel.categories?.filter { !selectedInterests.contains($0) } ?? [], id: \.self) { interest in
-                                InterestRow(interest: interest, isSelected: false) {
-                                    toggleInterest(interest: interest) // Ajouter ou retirer l'intérêt
-                                }.listRowBackground(Color(red: 1, green: 0.9918245673, blue: 0.974753201))
+                            // Filtrer les éléments pour exclure ceux déjà sélectionnés
+                            ForEach(viewModel.categories ?? [], id: \.self) { topic in
+                                // Affichage du sujet principal
+                                if !selectedInterests.contains(topic.name) {
+                                    InterestRow(interest: topic.name.raw, isSelected: false) {
+                                        toggleInterest(interest: topic.name)
+                                    }
+                                    .listRowBackground(Color(red: 1, green: 0.9918245673, blue: 0.974753201))
+                                }
+                                
+                                // Affichage des sous-catégories
+                                ForEach(topic.subTopics?.filter { !selectedInterests.contains($0.name) } ?? [], id: \.self) { subTopic in
+                                    InterestRow(interest: subTopic.name.raw, isSelected: false) {
+                                        toggleInterest(interest: subTopic.name)
+                                    }
+                                    .listRowBackground(Color(red: 1, green: 0.9918245673, blue: 0.974753201))
+                                }
                             }
                         }
                     }.task {
@@ -116,13 +125,13 @@ struct CategoriesView: View {
                 }
                 .navigationBarItems(
                     leading: Button("Annuler") {
-                        clearSelectedInterests() // Effacer tout
+                        clearSelectedInterests() // Efface tous les UserDefaults
                     }.foregroundStyle(.black),
                     trailing: Button("Enregistrer") {
-                        saveSelectedInterests() // Sauvegarder
+                        saveSelectedInterests() // Sauvegarde des sélections
                     }.foregroundStyle(.black)
                 )
-                .environment(\.editMode, isEditing ? .constant(.active) : .constant(.inactive)) // Gérer l'état d'édition
+                .environment(\.editMode, isEditing ? .constant(.active) : .constant(.inactive))
                 .toolbar {
                     ToolbarItem(placement: .principal) {
                         Text("Centres d’intérêt")
@@ -137,41 +146,49 @@ struct CategoriesView: View {
         }
     }
     
-    // Fonction pour charger les centres d'intérêt depuis les UserDefaults
+    // Charger les centres d'intérêt depuis UserDefaults
     private func loadSelectedInterests() {
-        if let savedInterests = UserDefaults.standard.array(forKey: "selectedInterests") as? [String] {
-            selectedInterests = savedInterests
+        if let data = UserDefaults.standard.object(forKey: userDefaultsKey) as? Data,
+        let category = try? JSONDecoder().decode([Name].self, from: data) {
+            selectedInterests = category
         }
     }
     
-    // Fonction pour ajouter ou retirer un intérêt de la liste sélectionnée
-    private func toggleInterest(interest: String) {
-        if selectedInterests.contains(interest) {
-            // Supprimer de la liste des sélectionnés
+    // Ajouter ou retirer un intérêt de la liste sélectionnée
+    private func toggleInterest(interest: Name) {
+        withAnimation {
+            if selectedInterests.contains(interest) {
+                selectedInterests.removeAll { $0 == interest }
+            } else {
+                selectedInterests.append(interest)
+            }
+            // Ne sauvegarde pas encore dans UserDefaults
+        }
+    }
+    
+    // Retirer un intérêt de la liste des sélectionnés
+    private func removeFromSelected(interest: Name) {
+        withAnimation {
             selectedInterests.removeAll { $0 == interest }
-        } else {
-            // Ajouter à la liste des sélectionnés
-            selectedInterests.append(interest)
+            // Ne sauvegarde pas encore dans UserDefaults
         }
-        saveSelectedInterests() // Sauvegarder les changements après modification
     }
     
-    // Fonction pour retirer un intérêt de la liste des sélectionnés
-    private func removeFromSelected(interest: String) {
-        // Retirer de la liste des centres d'intérêt sélectionnés
-        selectedInterests.removeAll { $0 == interest }
-        saveSelectedInterests() // Mettre à jour UserDefaults immédiatement
-    }
-    
-    // Fonction pour sauvegarder les centres d'intérêts dans les UserDefaults
+    // Sauvegarder les centres d'intérêts dans UserDefaults uniquement lorsque le bouton "Enregistrer" est appuyé
     private func saveSelectedInterests() {
-        UserDefaults.standard.set(selectedInterests, forKey: "selectedInterests")
+        if let encoded = try? JSONEncoder().encode(selectedInterests) {
+            UserDefaults.standard.set(encoded, forKey: userDefaultsKey)
+        }
+        self.idsToSave = self.selectedInterests.map { $0.key.replacingOccurrences(of: "topic.", with: "")}
+        dump(idsToSave)
     }
     
-    // Fonction pour effacer la liste des centres d'intérêt et les UserDefaults
+    // Effacer la liste des centres d'intérêt et les UserDefaults
     private func clearSelectedInterests() {
         selectedInterests.removeAll() // Vider la liste des centres d'intérêt
-        UserDefaults.standard.removeObject(forKey: "selectedInterests") // Supprimer des UserDefaults
+        UserDefaults.standard.removeObject(forKey: userDefaultsKey) // Supprimer des UserDefaults
+        self.idsToSave.removeAll()
+        dump(idsToSave)
     }
 }
 

@@ -9,7 +9,8 @@ import Foundation
 
 class CategoriesViewModel: ObservableObject {
     
-    @Published var categories: [String]?
+    @Published var categories: [Category]?
+    @Published var categoriesMap: [Name]?
     @Published var errorMessage: String?
     @Published var isLoading: Bool = false
     @Published var isErrorLoading: Bool = false
@@ -27,7 +28,8 @@ class CategoriesViewModel: ObservableObject {
                     switch result {
                 case .success(let categories):
                     self?.isLoading = false
-                        self?.categories = self?.extractCategoryAndSubtopicNames(from: categories)
+                        self?.categories = categories
+                        self?.categoriesMap = self?.extractNames(from: categories)
                 case .failure(let error):
                         self?.isLoading = false
                         self?.isErrorLoading = true
@@ -37,16 +39,46 @@ class CategoriesViewModel: ObservableObject {
         }
     }
     
-    func extractCategoryAndSubtopicNames(from categories: [Category]) -> [String] {
-        var names: [String] = []
+    func extractKey(from categories: [Category]) -> [String] {
+        var key: [String] = []
         
         for category in categories {
-            names.append(category.name.raw)
+            key.append(category.id)
             
             for subTopic in category.subTopics ?? [] {
-                names.append(subTopic.name.raw)
+                key.append(subTopic.id)
             }
         }
+        return key
+    }
+    
+    func extractName(from categories: [Category]) -> [String] {
+        var name: [String] = []
+        
+        for category in categories {
+            name.append(category.name.raw)
+            
+            for subTopic in category.subTopics ?? [] {
+                name.append(subTopic.name.raw)
+            }
+        }
+        return name
+    }
+    
+    func extractNames(from topics: [Category]) -> [Name] {
+        var names: [Name] = []
+        
+        // Parcours chaque topic dans le tableau
+        for topic in topics {
+            // Ajouter le nom principal du topic
+            names.append(topic.name)
+            
+            // Ajouter les noms des sous-thèmes du topic
+            for subTopic in topic.subTopics ?? [] {
+                names.append(subTopic.name)
+            }
+        }
+        
         return names
     }
 }

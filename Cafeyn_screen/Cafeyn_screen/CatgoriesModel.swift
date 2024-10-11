@@ -9,17 +9,20 @@ import Foundation
 
 //Model object
 
-struct Category: Decodable {
+struct Category: Decodable, Equatable, Hashable, Encodable {
+    
     let id: String
     let name: Name
     let subTopics: [Category]?
-    let parentIDS: [String]?
+    
 }
 
-struct Name: Codable, Equatable {
+struct Name: Codable, Equatable, Hashable{
     let raw: String
     let key: String
 }
 
-
-
+struct CategoryResponse: Decodable {
+    let id: String
+    let name: Name
+}
