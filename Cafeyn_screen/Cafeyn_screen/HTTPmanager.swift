@@ -8,13 +8,28 @@
 import Foundation
 
 //Possible errros while fetching data API
-enum APIError: Error {
+enum APIError: Error, Equatable {
     case invalidURL
     case requestFailed(Error)
     case invalidResponse
     case decodingFailed(Error)
     case encodingFailed(Error)
     case noDataReceived(Error)
+    
+    static func == (lhs: APIError, rhs: APIError) -> Bool {
+           switch (lhs, rhs) {
+           case (.invalidURL, .invalidURL),
+                (.invalidResponse, .invalidResponse):
+               return true
+           case (.noDataReceived, .noDataReceived),
+                (.requestFailed, .requestFailed),
+                (.decodingFailed, .decodingFailed),
+                (.encodingFailed, .encodingFailed):
+               return true
+           default:
+               return false
+           }
+       }
 }
 
 class HTTPmanager {

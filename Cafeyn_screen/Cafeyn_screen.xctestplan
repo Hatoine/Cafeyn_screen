@@ -1,0 +1,29 @@
+{
+  "configurations" : [
+    {
+      "id" : "544B04E8-14F2-4DD8-AEC6-5269B1ADCF65",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:Cafeyn_screen.xcodeproj",
+      "identifier" : "39D59CBA2CB527F500A69E2C",
+      "name" : "Cafeyn_screen"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:Cafeyn_screen.xcodeproj",
+        "identifier" : "39D59CCA2CB527F700A69E2C",
+        "name" : "Cafeyn_screenTests"
+      }
+    }
+  ],
+  "version" : 1
+}

@@ -6,7 +6,18 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		39B898D12CBD51CD00883125 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39B898BD2CBD47DF00883125 /* XCTest.framework */; platformFilter = ios; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
+		39B898DC2CBD521400883125 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 39D59CB32CB527F500A69E2C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 39D59CBA2CB527F500A69E2C;
+			remoteInfo = Cafeyn_screen;
+		};
 		39D59CCC2CB527F700A69E2C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 39D59CB32CB527F500A69E2C /* Project object */;
@@ -24,20 +35,62 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		39B898BD2CBD47DF00883125 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		39B898CB2CBD4E0000883125 /* Cafeyn_screen.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = Cafeyn_screen.xctestplan; sourceTree = "<group>"; };
+		39B898D82CBD521400883125 /* Cafeyn_screenTestsFinal.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Cafeyn_screenTestsFinal.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		39D59CBB2CB527F500A69E2C /* Cafeyn_screen.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Cafeyn_screen.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		39D59CCB2CB527F700A69E2C /* Cafeyn_screenTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Cafeyn_screenTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		39D59CD52CB527F700A69E2C /* Cafeyn_screenUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Cafeyn_screenUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		39B898C12CBD48AF00883125 /* Exceptions for "Cafeyn_screen" folder in "Cafeyn_screenTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				CategoriesRepository.swift,
+				CatgoriesModel.swift,
+				HTTPmanager.swift,
+				InterestsRepository.swift,
+				Logger.swift,
+			);
+			target = 39D59CCA2CB527F700A69E2C /* Cafeyn_screenTests */;
+		};
+		39B898E22CBD522D00883125 /* Exceptions for "Cafeyn_screenTests" folder in "Cafeyn_screenTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				CategoriesRepositoryTests.swift,
+				InterestsRepositoryTests.swift,
+				MockHTTPManager.swift,
+			);
+			target = 39D59CCA2CB527F700A69E2C /* Cafeyn_screenTests */;
+		};
+		39B898E32CBD522D00883125 /* Exceptions for "Cafeyn_screenTests" folder in "Cafeyn_screenTestsFinal" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				CategoriesRepositoryTests.swift,
+				InterestsRepositoryTests.swift,
+				MockHTTPManager.swift,
+			);
+			target = 39B898D72CBD521400883125 /* Cafeyn_screenTestsFinal */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		39D59CBD2CB527F500A69E2C /* Cafeyn_screen */ = {
+		39B898D92CBD521400883125 /* Cafeyn_screenTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = Cafeyn_screen;
+			exceptions = (
+				39B898E22CBD522D00883125 /* Exceptions for "Cafeyn_screenTests" folder in "Cafeyn_screenTests" target */,
+				39B898E32CBD522D00883125 /* Exceptions for "Cafeyn_screenTests" folder in "Cafeyn_screenTestsFinal" target */,
+			);
+			path = Cafeyn_screenTests;
 			sourceTree = "<group>";
 		};
-		39D59CCE2CB527F700A69E2C /* Cafeyn_screenTests */ = {
+		39D59CBD2CB527F500A69E2C /* Cafeyn_screen */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = Cafeyn_screenTests;
+			exceptions = (
+				39B898C12CBD48AF00883125 /* Exceptions for "Cafeyn_screen" folder in "Cafeyn_screenTests" target */,
+			);
+			path = Cafeyn_screen;
 			sourceTree = "<group>";
 		};
 		39D59CD82CB527F700A69E2C /* Cafeyn_screenUITests */ = {
@@ -48,6 +101,13 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		39B898D52CBD521400883125 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		39D59CB82CB527F500A69E2C /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -59,6 +119,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				39B898D12CBD51CD00883125 /* XCTest.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -72,12 +133,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		39B898BC2CBD47DF00883125 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				39B898BD2CBD47DF00883125 /* XCTest.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		39D59CB22CB527F500A69E2C = {
 			isa = PBXGroup;
 			children = (
+				39B898CB2CBD4E0000883125 /* Cafeyn_screen.xctestplan */,
 				39D59CBD2CB527F500A69E2C /* Cafeyn_screen */,
-				39D59CCE2CB527F700A69E2C /* Cafeyn_screenTests */,
 				39D59CD82CB527F700A69E2C /* Cafeyn_screenUITests */,
+				39B898D92CBD521400883125 /* Cafeyn_screenTests */,
+				39B898BC2CBD47DF00883125 /* Frameworks */,
 				39D59CBC2CB527F500A69E2C /* Products */,
 			);
 			sourceTree = "<group>";
@@ -88,6 +159,7 @@
 				39D59CBB2CB527F500A69E2C /* Cafeyn_screen.app */,
 				39D59CCB2CB527F700A69E2C /* Cafeyn_screenTests.xctest */,
 				39D59CD52CB527F700A69E2C /* Cafeyn_screenUITests.xctest */,
+				39B898D82CBD521400883125 /* Cafeyn_screenTestsFinal.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -95,6 +167,29 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		39B898D72CBD521400883125 /* Cafeyn_screenTestsFinal */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 39B898DE2CBD521400883125 /* Build configuration list for PBXNativeTarget "Cafeyn_screenTestsFinal" */;
+			buildPhases = (
+				39B898D42CBD521400883125 /* Sources */,
+				39B898D52CBD521400883125 /* Frameworks */,
+				39B898D62CBD521400883125 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				39B898DD2CBD521400883125 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				39B898D92CBD521400883125 /* Cafeyn_screenTests */,
+			);
+			name = Cafeyn_screenTestsFinal;
+			packageProductDependencies = (
+			);
+			productName = Cafeyn_screenTestsFinal;
+			productReference = 39B898D82CBD521400883125 /* Cafeyn_screenTestsFinal.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		39D59CBA2CB527F500A69E2C /* Cafeyn_screen */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 39D59CDF2CB527F700A69E2C /* Build configuration list for PBXNativeTarget "Cafeyn_screen" */;
@@ -129,9 +224,6 @@
 			);
 			dependencies = (
 				39D59CCD2CB527F700A69E2C /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				39D59CCE2CB527F700A69E2C /* Cafeyn_screenTests */,
 			);
 			name = Cafeyn_screenTests;
 			packageProductDependencies = (
@@ -173,6 +265,10 @@
 				LastSwiftUpdateCheck = 1600;
 				LastUpgradeCheck = 1600;
 				TargetAttributes = {
+					39B898D72CBD521400883125 = {
+						CreatedOnToolsVersion = 16.0;
+						TestTargetID = 39D59CBA2CB527F500A69E2C;
+					};
 					39D59CBA2CB527F500A69E2C = {
 						CreatedOnToolsVersion = 16.0;
 					};
@@ -204,11 +300,19 @@
 				39D59CBA2CB527F500A69E2C /* Cafeyn_screen */,
 				39D59CCA2CB527F700A69E2C /* Cafeyn_screenTests */,
 				39D59CD42CB527F700A69E2C /* Cafeyn_screenUITests */,
+				39B898D72CBD521400883125 /* Cafeyn_screenTestsFinal */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		39B898D62CBD521400883125 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		39D59CB92CB527F500A69E2C /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -233,6 +337,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		39B898D42CBD521400883125 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		39D59CB72CB527F500A69E2C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -257,6 +368,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		39B898DD2CBD521400883125 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 39D59CBA2CB527F500A69E2C /* Cafeyn_screen */;
+			targetProxy = 39B898DC2CBD521400883125 /* PBXContainerItemProxy */;
+		};
 		39D59CCD2CB527F700A69E2C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 39D59CBA2CB527F500A69E2C /* Cafeyn_screen */;
@@ -270,6 +386,42 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		39B898DF2CBD521400883125 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 97Y9LAC48L;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.antoniol.standup.Cafeyn-screenTestsFinal";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Cafeyn_screen.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Cafeyn_screen";
+			};
+			name = Debug;
+		};
+		39B898E02CBD521400883125 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 97Y9LAC48L;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.antoniol.standup.Cafeyn-screenTestsFinal";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Cafeyn_screen.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Cafeyn_screen";
+			};
+			name = Release;
+		};
 		39D59CDD2CB527F700A69E2C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -524,6 +676,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		39B898DE2CBD521400883125 /* Build configuration list for PBXNativeTarget "Cafeyn_screenTestsFinal" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				39B898DF2CBD521400883125 /* Debug */,
+				39B898E02CBD521400883125 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		39D59CB62CB527F500A69E2C /* Build configuration list for PBXProject "Cafeyn_screen" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

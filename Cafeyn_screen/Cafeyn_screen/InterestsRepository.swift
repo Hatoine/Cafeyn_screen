@@ -11,7 +11,6 @@ protocol ProtocolDataInterestsManager {
     func saveCategoriesSelection(ids: [String], completion: @escaping (Result<Void, APIError>) -> Void)
 }
 
-
 class InterestsRepository: ProtocolDataInterestsManager {
         
     private let userDefaultsKey: String = "selectedInterests"

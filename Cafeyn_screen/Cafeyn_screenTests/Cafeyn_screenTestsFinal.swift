@@ -1,14 +1,13 @@
 //
-//  Cafeyn_screenTests.swift
-//  Cafeyn_screenTests
+//  Cafeyn_screenTestsFinal.swift
+//  Cafeyn_screenTestsFinal
 //
-//  Created by Antoine Antoiniol on 08/10/2024.
+//  Created by Antoine Antoiniol on 14/10/2024.
 //
 
 import XCTest
-@testable import Cafeyn_screen
 
-final class Cafeyn_screenTests: XCTestCase {
+final class Cafeyn_screenTestsFinal: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -28,7 +27,7 @@ final class Cafeyn_screenTests: XCTestCase {
 
     func testPerformanceExample() throws {
         // This is an example of a performance test case.
-        self.measure {
+        measure {
             // Put the code you want to measure the time of here.
         }
     }
