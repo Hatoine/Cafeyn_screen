@@ -11,7 +11,7 @@ import SwiftUI
 struct Cafeyn_screenApp: App {
     var body: some Scene {
         WindowGroup {
-            CategoriesView()
+            LaunchScreenView()
         }
     }
 }
