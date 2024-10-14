@@ -12,13 +12,16 @@ struct CategoriesView: View {
     @StateObject private var viewModel: CategoriesViewModel
     @State private var selectedInterests: [Name] = []
     @State private var isEditing = false
-    private var userDefaultsKey: String = "selectedInterests"
-    @State var idsToSave = [String]()
+    
+    private var interestsRepository: InterestsRepository
     
     init() {
+        interestsRepository = InterestsRepository(apiService: HTTPmanager())
         let apiService = HTTPmanager()
         let categoriesRepository = CategoriesRepository(apiService: apiService)
-        _viewModel = StateObject(wrappedValue: CategoriesViewModel(categoriesRepositories: categoriesRepository))
+        let interests = InterestsRepository(apiService: apiService)
+        _viewModel = StateObject(wrappedValue: CategoriesViewModel(categoriesRepositories: categoriesRepository, interestsRepositories: interests))
+         // Initialiser le repository des centres d'intérêt
     }
     
     var body: some View {
@@ -86,9 +89,9 @@ struct CategoriesView: View {
                                 .padding(EdgeInsets(top: 20, leading: 50, bottom: 0, trailing: 0))
                                 .background(Color(red: 1, green: 0.9918245673, blue: 0.974753201))
                         }
-                        if viewModel.isErrorLoading {
+                        if viewModel.isErrorLoading || viewModel.categories?.isEmpty == true {
                             VStack(spacing: 8) {
-                                Text("Erreur lors du chargement des catégories.")
+                                Text("Aucune catégorie disponible")
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
                                     .multilineTextAlignment(.center)
@@ -97,7 +100,7 @@ struct CategoriesView: View {
                             .background(
                                 RoundedRectangle(cornerRadius: 10)
                                     .stroke(Color.gray, lineWidth: 1)
-                            )
+                            ).padding(EdgeInsets(top: 20, leading: 50, bottom: 20, trailing: 0))
                         } else {
                             // Filtrer les éléments pour exclure ceux déjà sélectionnés
                             ForEach(viewModel.categories ?? [], id: \.self) { topic in
@@ -146,12 +149,9 @@ struct CategoriesView: View {
         }
     }
     
-    // Charger les centres d'intérêt depuis UserDefaults
+    // Charger les centres d'intérêt depuis UserDefaults en utilisant le repository
     private func loadSelectedInterests() {
-        if let data = UserDefaults.standard.object(forKey: userDefaultsKey) as? Data,
-        let category = try? JSONDecoder().decode([Name].self, from: data) {
-            selectedInterests = category
-        }
+        selectedInterests = interestsRepository.loadSelectedInterests()
     }
     
     // Ajouter ou retirer un intérêt de la liste sélectionnée
@@ -176,19 +176,18 @@ struct CategoriesView: View {
     
     // Sauvegarder les centres d'intérêts dans UserDefaults uniquement lorsque le bouton "Enregistrer" est appuyé
     private func saveSelectedInterests() {
-        if let encoded = try? JSONEncoder().encode(selectedInterests) {
-            UserDefaults.standard.set(encoded, forKey: userDefaultsKey)
-        }
-        self.idsToSave = self.selectedInterests.map { $0.key.replacingOccurrences(of: "topic.", with: "")}
-        dump(idsToSave)
+        interestsRepository.saveSelectedInterests(selectedInterests)
+        interestsRepository.idsToSave = self.selectedInterests.map { $0.key.replacingOccurrences(of: "topic.", with: "")}
+        viewModel.saveSelectedCategories(ids: interestsRepository.idsToSave)
     }
+    
     
     // Effacer la liste des centres d'intérêt et les UserDefaults
     private func clearSelectedInterests() {
         selectedInterests.removeAll() // Vider la liste des centres d'intérêt
-        UserDefaults.standard.removeObject(forKey: userDefaultsKey) // Supprimer des UserDefaults
-        self.idsToSave.removeAll()
-        dump(idsToSave)
+        interestsRepository.clearSelectedInterests() // Supprimer des UserDefaults
+        interestsRepository.idsToSave.removeAll()
+        viewModel.saveSelectedCategories(ids: interestsRepository.idsToSave)
     }
 }
 

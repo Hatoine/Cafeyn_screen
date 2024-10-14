@@ -16,6 +16,9 @@ enum LogType: String {
     case requestError = "REQUEST_ERROR"
     case noData = "NO_DATA_RECEIVED"
     case decodingError = "DECODING_ERROR"
+    case encodingError = "ENCODING_ERROR"
+    case successDataSent = "SUCCESS_DATA_SENT"
+    case failureDataSent = "FAILURE_DATA_SENT"
     
     var logDescription: String {
         switch self {
@@ -33,6 +36,12 @@ enum LogType: String {
             return "No data received from server 🚫"
         case .decodingError:
             return "Decoding error 🚫"
+        case .encodingError:
+            return "Encoding error 🚫"
+        case.successDataSent:
+            return "Favorites data successfully sent ✅"
+        case.failureDataSent:
+            return "Favorites data failed to send 🚫"
         }
     }
 }
@@ -55,6 +64,10 @@ class Logger {
     
     //Logger for info
     static func info(message: String) {
+        log(message: message, level: .info)
+    }
+    
+    static func success(message: String) {
         log(message: message, level: .info)
     }
     

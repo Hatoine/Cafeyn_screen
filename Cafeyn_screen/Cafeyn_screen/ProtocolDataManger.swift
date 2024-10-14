@@ -7,6 +7,4 @@
 
 import Foundation
 
-protocol ProtocolDataManger {
-    func getCategories(apiUrl: String, completion: @escaping (Result<[Category], APIError>) -> Void)
-}
+
