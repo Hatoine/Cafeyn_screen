@@ -17,24 +17,25 @@ enum APIError: Error, Equatable {
     case noDataReceived(Error)
     
     static func == (lhs: APIError, rhs: APIError) -> Bool {
-           switch (lhs, rhs) {
-           case (.invalidURL, .invalidURL),
-                (.invalidResponse, .invalidResponse):
-               return true
-           case (.noDataReceived, .noDataReceived),
-                (.requestFailed, .requestFailed),
-                (.decodingFailed, .decodingFailed),
-                (.encodingFailed, .encodingFailed):
-               return true
-           default:
-               return false
-           }
-       }
+        switch (lhs, rhs) {
+        case (.invalidURL, .invalidURL),
+            (.invalidResponse, .invalidResponse):
+            return true
+        case (.noDataReceived, .noDataReceived),
+            (.requestFailed, .requestFailed),
+            (.decodingFailed, .decodingFailed),
+            (.encodingFailed, .encodingFailed):
+            return true
+        default:
+            return false
+        }
+    }
 }
 
+//Class for HTTP requests
 class HTTPmanager {
     
-    //Generic methode to fetchData from API
+    //Method to fetch data from API
     func fetchData<T: Decodable>(from urlString: String, responseType: T.Type, completion: @escaping (Result<T, APIError>) -> Void) {
         
         Logger.info(message: LogType.info.logDescription + "\(urlString)")
@@ -46,7 +47,6 @@ class HTTPmanager {
         }
         
         URLSession.shared.dataTask(with: url) { data, response, error in
-            
             if let error = error {
                 Logger.error(message: LogType.requestError.logDescription + "\(error.localizedDescription)")
                 completion(.failure(.requestFailed(error)))
@@ -75,8 +75,8 @@ class HTTPmanager {
             }
         }.resume()
     }
-
-    // Méthode générique pour envoyer une liste à une API sans retour de données
+    
+    //Method to send data to API
     func sendIdsListToAPI<T: Encodable>(list: [T], to urlString: String, completion: @escaping (Result<Void, APIError>) -> Void) {
         
         Logger.info(message: LogType.info.logDescription + "\(urlString)")
@@ -87,12 +87,10 @@ class HTTPmanager {
             return
         }
         
-        // 2. Créer la requête
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
-        // 3. Encoder la liste en JSON
         do {
             let jsonData = try JSONEncoder().encode(list)
             request.httpBody = jsonData
@@ -102,7 +100,6 @@ class HTTPmanager {
             return
         }
         
-        // 4. Envoyer la requête via URLSession
         let task = URLSession.shared.dataTask(with: request) { _, response, error in
             if let error = error {
                 Logger.error(message: LogType.requestError.logDescription + "\(error.localizedDescription)")
@@ -110,19 +107,16 @@ class HTTPmanager {
                 return
             }
             
-            // Vérifier la réponse du serveur
             if let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) {
                 Logger.success(message: LogType.success.logDescription)
-                completion(.success(())) // Succès sans retour de données
+                completion(.success(()))
             } else {
-                Logger.warning(message: LogType.warning.logDescription + "Réponse de l'API incorrecte")
+                Logger.warning(message: LogType.warning.logDescription)
                 completion(.failure(.invalidResponse))
             }
         }
-        
-        // 5. Démarrer la tâche
         task.resume()
     }
 }
-  
+
 

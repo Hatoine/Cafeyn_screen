@@ -7,10 +7,10 @@
 
 import SwiftUI
 
+//Interests placeholder view
 struct InterestsPlaceHolderView: View {
     @State var mainText: String = ""
     @State var subText: String = ""
-    
     
     var body: some View {
         VStack(spacing: 8) {

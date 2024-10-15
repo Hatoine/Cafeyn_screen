@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+//Categories placeholder view
 struct NoCategoriesView: View {
     @State var noCategoriesText: String = ""
     

@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+//Toolbar text view
 struct ToolBarTextView: View {
     @State var toolbarText: String = ""
     

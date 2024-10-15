@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+//Section zero header text
 struct SectionZeroHeaderText: View {
     @State var text = ""
     

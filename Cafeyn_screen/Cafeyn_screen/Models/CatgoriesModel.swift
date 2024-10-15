@@ -7,8 +7,7 @@
 
 import Foundation
 
-//Model object
-
+//Model object for data
 struct Category: Decodable, Hashable, Encodable {
     let id: String
     let name: Name

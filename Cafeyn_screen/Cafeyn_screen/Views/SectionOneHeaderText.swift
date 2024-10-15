@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+//Section one header text
 struct SectionOneHeaderText: View {
     @State var headerText: String = ""
     

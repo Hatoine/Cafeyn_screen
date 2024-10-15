@@ -7,7 +7,7 @@
 
 import Foundation
 
-//Logger types
+//Logger enum for differents log cases
 enum LogType: String {
     case info = "INFO"
     case warning = "WARNING"
@@ -22,11 +22,11 @@ enum LogType: String {
     
     var logDescription: String {
         switch self {
-        case .info: 
+        case .info:
             return "Fetching data from URL:"
-        case .warning: 
+        case .warning:
             return "Invalid response from server 🚫 :"
-        case .error: 
+        case .error:
             return "Invalid URL 🚫 :"
         case .success:
             return "Data successfully decoded ✅"
@@ -48,6 +48,7 @@ enum LogType: String {
 
 class Logger {
     
+    //Log method
     static func log(message: String, level: LogType = .info, file: String = #file, function: String = #function, line: Int = #line) {
         
         //Date for log message
@@ -67,6 +68,7 @@ class Logger {
         log(message: message, level: .info)
     }
     
+    //Logger for success
     static func success(message: String) {
         log(message: message, level: .info)
     }
@@ -76,7 +78,7 @@ class Logger {
         log(message: message, level: .warning)
     }
     
-    //Logger for erroe
+    //Logger for error
     static func error(message: String) {
         log(message: message, level: .error)
     }

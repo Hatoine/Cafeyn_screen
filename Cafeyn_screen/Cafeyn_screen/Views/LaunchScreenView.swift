@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+//Launchscreen animated view
 struct LaunchScreenView: View {
     @State private var isActive = false
     @State private var size = 0.8
@@ -14,11 +15,12 @@ struct LaunchScreenView: View {
     
     var body: some View {
         if isActive {
-            CategoriesView()  // L'écran principal que vous souhaitez afficher après le LaunchScreen
+            //Main app screen after launchscreen
+            CategoriesView()
         } else {
             ZStack {
                 Color(UIColor(named: "BackgroundColor_launch") ?? .white)
-                .ignoresSafeArea()
+                    .ignoresSafeArea()
                 VStack {
                     Image(.cafeyn)
                         .resizable()
@@ -34,13 +36,13 @@ struct LaunchScreenView: View {
                         self.size = 170
                         self.opacity = 1
                     }
-                    // Changer l'écran après un délai (par ex. 2 secondes)
+                    
                     DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
                         self.isActive = true
                     }
                 }
             }
-          
+            
         }
     }
 }
