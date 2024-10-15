@@ -14,6 +14,7 @@ class CategoriesViewModel: ObservableObject {
     @Published var errorMessage: String?
     @Published var isLoading: Bool = false
     @Published var isErrorLoading: Bool = false
+    @Published var isEmptyList: Bool = false
     private var categoriesRepositories: ProtocolDataManager
     private var interestsRepositories: ProtocolDataInterestsManager
     
@@ -31,6 +32,9 @@ class CategoriesViewModel: ObservableObject {
                 case .success(let categories):
                     self?.isLoading = false
                     self?.categories = categories
+                    if self?.categories?.isEmpty == true {
+                        self?.isEmptyList = true
+                    }
                 case .failure(let error):
                     self?.isLoading = false
                     self?.isErrorLoading = true

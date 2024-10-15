@@ -16,26 +16,31 @@ struct LaunchScreenView: View {
         if isActive {
             CategoriesView()  // L'écran principal que vous souhaitez afficher après le LaunchScreen
         } else {
-            VStack {
-                Image(systemName: "sparkles")
-                    .font(.system(size: 80))
-                    .foregroundColor(.blue)
-                Text("Welcome to My App")
-                    .font(Font.custom("HelveticaNeue-Bold", size: 26))
-                    .foregroundColor(.blue.opacity(0.8))
-            }
-            .scaleEffect(size)
-            .opacity(opacity)
-            .onAppear {
-                withAnimation(.easeIn(duration: 1.2)) {
-                    self.size = 0.9
-                    self.opacity = 1.0
+            ZStack {
+                Color(UIColor(named: "BackfgroundColor_launch") ?? .clear)
+                .ignoresSafeArea()
+                VStack {
+                    Image(.cafeyn)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .font(.system(size: 80))
+                        .foregroundColor(.blue)
+                        .frame(width: 20, height: 20)
                 }
-                // Changer l'écran après un délai (par ex. 2 secondes)
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                    self.isActive = true
+                .scaleEffect(size)
+                .opacity(opacity)
+                .onAppear {
+                    withAnimation(.easeIn(duration: 3)) {
+                        self.size = 170
+                        self.opacity = 1
+                    }
+                    // Changer l'écran après un délai (par ex. 2 secondes)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                        self.isActive = true
+                    }
                 }
             }
+          
         }
     }
 }

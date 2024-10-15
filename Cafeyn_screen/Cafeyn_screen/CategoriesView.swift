@@ -89,7 +89,7 @@ struct CategoriesView: View {
                                 .padding(EdgeInsets(top: 20, leading: 50, bottom: 0, trailing: 0))
                                 .background(Color(red: 1, green: 0.9918245673, blue: 0.974753201))
                         }
-                        if viewModel.isErrorLoading || viewModel.categories?.isEmpty == true {
+                        if viewModel.isErrorLoading || viewModel.isEmptyList == true {
                             VStack(spacing: 8) {
                                 Text("Aucune catégorie disponible")
                                     .font(.subheadline)
