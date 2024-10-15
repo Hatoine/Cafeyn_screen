@@ -47,11 +47,11 @@
 		39B898C12CBD48AF00883125 /* Exceptions for "Cafeyn_screen" folder in "Cafeyn_screenTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				CategoriesRepository.swift,
-				CatgoriesModel.swift,
-				HTTPmanager.swift,
-				InterestsRepository.swift,
-				Logger.swift,
+				HTTPmanager/HTTPmanager.swift,
+				Logger/Logger.swift,
+				Models/CatgoriesModel.swift,
+				Repositories/CategoriesRepository.swift,
+				Repositories/InterestsRepository.swift,
 			);
 			target = 39D59CCA2CB527F700A69E2C /* Cafeyn_screenTests */;
 		};

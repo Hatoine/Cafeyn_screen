@@ -17,7 +17,7 @@ struct LaunchScreenView: View {
             CategoriesView()  // L'écran principal que vous souhaitez afficher après le LaunchScreen
         } else {
             ZStack {
-                Color(UIColor(named: "BackfgroundColor_launch") ?? .clear)
+                Color(UIColor(named: "BackgroundColor_launch") ?? .white)
                 .ignoresSafeArea()
                 VStack {
                     Image(.cafeyn)

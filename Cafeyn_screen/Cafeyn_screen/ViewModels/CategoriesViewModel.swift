@@ -10,7 +10,6 @@ import Foundation
 class CategoriesViewModel: ObservableObject {
     
     @Published var categories: [Category]?
-    @Published var favoritesInterest: [Name]?
     @Published var errorMessage: String?
     @Published var isLoading: Bool = false
     @Published var isErrorLoading: Bool = false

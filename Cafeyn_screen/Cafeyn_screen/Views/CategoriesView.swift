@@ -12,6 +12,19 @@ struct CategoriesView: View {
     @StateObject private var viewModel: CategoriesViewModel
     @State private var selectedInterests: [Name] = []
     @State private var isEditing = false
+    let imageReorderingName = "square.and.pencil"
+    
+    //Hard coded strings to localize
+    let interests = "Organisez vos centres d’intérêt"
+    let placeHolderInterestsText = "Aucun centre d’intérêt sélectionné"
+    let secondPlaceHolderInterestsText = "Votre accueil sera personnalisé en fonction de vos choix."
+    let sectionOneHeaderText = "À découvrir"
+    let progressViewText = "Chargement des catégories"
+    let emptyListText = "Aucune catégorie disponible"
+    let toolbarText = "Centres d’intérêt"
+    let cancelButtonText = "Annuler"
+    let saveButtonText = "Enregistrer"
+    
     
     private var interestsRepository: InterestsRepository
     
@@ -31,39 +44,18 @@ struct CategoriesView: View {
                     // Première section : Centres d'intérêt sélectionnés
                     Section(
                         header: HStack {
-                            Text("Organisez vos centres d’intérêt")
-                                .font(.headline)
-                                .padding(.vertical, 8)
-                                .frame(maxWidth: .infinity, alignment: .leading)
+                            SectionZeroHeaderText(text: interests)
                             Button(action: {
                                 isEditing.toggle()
                             }) {
-                                Image(systemName: "square.and.pencil")
+                                Image(systemName: imageReorderingName)
                                     .font(.system(size: 20))
                                     .foregroundColor(isEditing ? .red : .black)
                             }
                         }
                     ) {
                         if selectedInterests.isEmpty {
-                            VStack(spacing: 8) {
-                                Text("Aucun centre d’intérêt sélectionné")
-                                    .bold()
-                                    .font(.headline)
-                                    .foregroundColor(.secondary)
-                                    .multilineTextAlignment(.center)
-                                Text("Votre accueil sera personnalisé en fonction de vos choix.")
-                                    .font(.subheadline)
-                                    .foregroundColor(.secondary)
-                                    .multilineTextAlignment(.center)
-                                    .padding(.horizontal, 16)
-                            }
-                            .padding()
-                            .background(
-                                RoundedRectangle(cornerRadius: 10)
-                                    .stroke(Color.gray, lineWidth: 1)
-                                    .background(Color.white)
-                            )
-                            .padding()
+                            InterestsPlaceHolderView(mainText: placeHolderInterestsText, subText: secondPlaceHolderInterestsText)
                         } else {
                             // Affichage des centres d'intérêts sélectionnés
                             ForEach(selectedInterests, id: \.self) { interest in
@@ -79,28 +71,16 @@ struct CategoriesView: View {
                     }.listRowBackground(Color(red: 1, green: 0.9918245673, blue: 0.974753201))
                     
                     // Seconde section : Centres d'intérêt à découvrir
-                    Section(header: Text("À découvrir")
-                        .font(.headline)
-                        .padding(.top, 20)
+                    Section(header: SectionOneHeaderText(headerText: sectionOneHeaderText)
                     ) {
                         if viewModel.isLoading {
-                            ProgressView("Chargement des catégories")
+                            ProgressView(progressViewText)
                                 .progressViewStyle(CircularProgressViewStyle())
                                 .padding(EdgeInsets(top: 20, leading: 50, bottom: 0, trailing: 0))
                                 .background(Color(red: 1, green: 0.9918245673, blue: 0.974753201))
                         }
                         if viewModel.isErrorLoading || viewModel.isEmptyList == true {
-                            VStack(spacing: 8) {
-                                Text("Aucune catégorie disponible")
-                                    .font(.subheadline)
-                                    .foregroundColor(.secondary)
-                                    .multilineTextAlignment(.center)
-                            }
-                            .padding()
-                            .background(
-                                RoundedRectangle(cornerRadius: 10)
-                                    .stroke(Color.gray, lineWidth: 1)
-                            ).padding(EdgeInsets(top: 20, leading: 50, bottom: 20, trailing: 0))
+                            NoCategoriesView(noCategoriesText:emptyListText )
                         } else {
                             // Filtrer les éléments pour exclure ceux déjà sélectionnés
                             ForEach(viewModel.categories ?? [], id: \.self) { topic in
@@ -127,19 +107,17 @@ struct CategoriesView: View {
                     .listStyle(InsetGroupedListStyle())
                 }
                 .navigationBarItems(
-                    leading: Button("Annuler") {
+                    leading: Button(cancelButtonText) {
                         clearSelectedInterests() // Efface tous les UserDefaults
                     }.foregroundStyle(.black),
-                    trailing: Button("Enregistrer") {
+                    trailing: Button(saveButtonText) {
                         saveSelectedInterests() // Sauvegarde des sélections
                     }.foregroundStyle(.black)
                 )
                 .environment(\.editMode, isEditing ? .constant(.active) : .constant(.inactive))
                 .toolbar {
                     ToolbarItem(placement: .principal) {
-                        Text("Centres d’intérêt")
-                            .font(.headline)
-                            .foregroundColor(.primary)
+                        ToolBarTextView(toolbarText: toolbarText)
                     }
                 }
             }
@@ -195,11 +173,13 @@ struct InterestRow: View {
     let interest: String
     let isSelected: Bool
     let action: () -> Void
+    let imageRemoveName = "minus.circle"
+    let imageAddName = "plus.circle"
     
     var body: some View {
         HStack {
             Button(action: action) {
-                Image(systemName: isSelected ? "minus.circle" : "plus.circle")
+                Image(systemName: isSelected ? imageRemoveName : imageAddName)
                     .foregroundColor(isSelected ? .red : .black)
                     .font(.title3)
             }
@@ -215,3 +195,4 @@ struct CategoriesView_Previews: PreviewProvider {
         CategoriesView()
     }
 }
+
