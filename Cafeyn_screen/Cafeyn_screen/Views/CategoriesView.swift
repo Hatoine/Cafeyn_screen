@@ -40,7 +40,6 @@ struct CategoriesView: View {
         let categoriesRepository = CategoriesRepository(apiService: apiService)
         let interests = InterestsRepository(apiService: apiService)
         _viewModel = StateObject(wrappedValue: CategoriesViewModel(categoriesRepositories: categoriesRepository, interestsRepositories: interests))
-        // Initialiser le repository des centres d'intérêt
     }
     
     var body: some View {
@@ -125,12 +124,12 @@ struct CategoriesView: View {
                 }
                 .navigationBarItems(
                     leading:
-                        //Cancel button to cancel interests and clear userdefaults  and interests list
+                        //Cancel button to cancel interests, clear userdefaults and interests list
                     Button(cancelButtonText) {
-                        clearSelectedInterests() // Efface tous les UserDefaults
+                        clearSelectedInterests()
                     }.foregroundStyle(.black),
                     trailing:
-                        //Save button to save interests in userdefaults list. If not clicked by the user, interests won't be store in userdefaults and data won't persist in the interests list. If the user delete all (or partially) interests manually, a click on the save button is necessary to clear userdefaults, otherwise interests data will persist in userdefaults
+                        //Save button to save interests in userdefaults list. If not clicked by the user, interests won't be store in userdefaults and data won't persist in the interests list. If the user delete all (or partially) interests manually, a click on the save button is necessary to clear userdefaults and save new or empty interests list, otherwise interests data will persist in userdefaults
                     Button(saveButtonText) {
                         saveSelectedInterests()
                     }.foregroundStyle(.black)
@@ -166,7 +165,6 @@ struct CategoriesView: View {
     private func removeFromSelected(interest: Name) {
         withAnimation {
             selectedInterests.removeAll { $0 == interest }
-            // Ne sauvegarde pas encore dans UserDefaults
         }
     }
     
@@ -180,14 +178,14 @@ struct CategoriesView: View {
     
     //Clear interests list and remove data from userdefaults
     private func clearSelectedInterests() {
-        selectedInterests.removeAll() // Vider la liste des centres d'intérêt
+        selectedInterests.removeAll()
         interestsRepository.clearSelectedInterests() // Supprimer des UserDefaults
         interestsRepository.idsToSave.removeAll()
         viewModel.saveSelectedCategories(ids: interestsRepository.idsToSave)
     }
 }
 
-//Interest row to display categories and interests in lists
+//Interest row to display categories and interests lists
 struct InterestRow: View {
     let interest: String
     let isSelected: Bool

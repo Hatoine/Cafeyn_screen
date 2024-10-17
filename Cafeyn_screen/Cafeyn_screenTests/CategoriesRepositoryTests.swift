@@ -14,10 +14,8 @@ class CategoriesRepositoryTests: XCTestCase {
     override func setUp() {
         super.setUp()
         
-        // Initialize the mock HTTPmanager
         mockAPIService = MockHTTPManager()
         
-        // Initialize the repository with the mock service
         repository = CategoriesRepository(apiService: mockAPIService)
     }
     
@@ -27,8 +25,9 @@ class CategoriesRepositoryTests: XCTestCase {
         super.tearDown()
     }
     
+    //Simulate successful API response with mock data
     func testGetCategories_Success() {
-        // Simulate successful API response with mock data
+        
         let mockCategories = [Category(id: "1", name: Name(raw: "News", key: "topic.news"), subTopics: nil)]
         let mockData = try! JSONEncoder().encode(mockCategories) // Create mock JSON data
         mockAPIService.mockData = mockData
@@ -38,8 +37,8 @@ class CategoriesRepositoryTests: XCTestCase {
         repository.getCategories { result in
             switch result {
             case .success(let categories):
-                XCTAssertEqual(categories.count, 1) // Expecting one category
-                XCTAssertEqual(categories.first?.name.raw, "News") // Check the name of the category
+                XCTAssertEqual(categories.count, 1)
+                XCTAssertEqual(categories.first?.name.raw, "News")
                 expectation.fulfill()
             case .failure:
                 XCTFail("Expected success but got failure")
@@ -49,8 +48,9 @@ class CategoriesRepositoryTests: XCTestCase {
         waitForExpectations(timeout: 1, handler: nil)
     }
     
+    //Simulate failure API response
     func testGetCategories_Failure() {
-        // Simulate API error
+        
         mockAPIService.shouldFail = true
         
         let expectation = self.expectation(description: "Fetching categories fails")
@@ -60,15 +60,16 @@ class CategoriesRepositoryTests: XCTestCase {
             case .success:
                 XCTFail("Expected failure but got success")
             case .failure(let error):
-                XCTAssertEqual(error, APIError.invalidResponse) // Check that the error matches
+                XCTAssertEqual(error, APIError.invalidResponse)
                 expectation.fulfill()
             }
         }
         waitForExpectations(timeout: 1, handler: nil)
     }
     
+    //Simulate decoding error by passing invalid data
     func testGetCategories_DecodingFailure() {
-        // Simulate decoding error by passing invalid data
+        
         let invalidData = "Invalid JSON".data(using: .utf8)!
         mockAPIService.mockData = invalidData
         

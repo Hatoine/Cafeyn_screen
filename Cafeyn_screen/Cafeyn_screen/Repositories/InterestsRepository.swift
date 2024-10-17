@@ -18,7 +18,7 @@ final class InterestsRepository: ProtocolInterestsRepository {
     private let userDefaultsKey: String = "selectedInterests"
     var idsToSave: [String] = []
     private var apiService: HTTPmanager
-    //Temporary empty url, awaiting backend
+    //Temporary empty url, awaiting backend infos
     private let url = ""
     
     init(apiService: HTTPmanager) {

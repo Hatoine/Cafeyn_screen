@@ -8,10 +8,11 @@
 
 import Foundation
 import XCTest
-@testable import Cafeyn_screen // Replace with your actual module name
+@testable import Cafeyn_screen
 
 class MockHTTPManager: HTTPmanager {
-    var shouldFail = false // Flag to simulate success or failure in API calls
+    //Simulate success or failure in API calls
+    var shouldFail = false
     
     var mockData: Data?
      
@@ -22,21 +23,26 @@ class MockHTTPManager: HTTPmanager {
              if let data = mockData {
                  do {
                      let decodedData = try JSONDecoder().decode(T.self, from: data)
-                     completion(.success(decodedData)) // Simulate successful response
+                     // Simulate successful response
+                     completion(.success(decodedData))
                  } catch {
-                     completion(.failure(.decodingFailed(error))) // Simulate decoding error
+                     // Simulate decoding error
+                     completion(.failure(.decodingFailed(error)))
                  }
              } else {
-                 completion(.failure(.noDataReceived(NSError(domain: "Test", code: 0, userInfo: nil)))) // Simulate no data
+                 // Simulate no data
+                 completion(.failure(.noDataReceived(NSError(domain: "Test", code: 0, userInfo: nil))))
              }
          }
      }
 
     override func sendIdsListToAPI<T: Encodable>(list: [T], to urlString: String, completion: @escaping (Result<Void, APIError>) -> Void) {
         if shouldFail {
-            completion(.failure(.requestFailed(NSError(domain: "", code: -1, userInfo: nil)))) // Simulate failure
+            // Simulate failure
+            completion(.failure(.requestFailed(NSError(domain: "", code: -1, userInfo: nil))))
         } else {
-            completion(.success(())) // Simulate success
+            // Simulate success
+            completion(.success(()))
         }
     }
 }

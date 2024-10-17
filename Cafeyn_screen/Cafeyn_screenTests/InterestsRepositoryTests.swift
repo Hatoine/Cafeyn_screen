@@ -16,7 +16,7 @@ class InterestsRepositoryTests: XCTestCase {
         super.setUp()
         mockHTTPManager = MockHTTPManager()
         interestsRepository = InterestsRepository(apiService: mockHTTPManager)
-        // Clear UserDefaults before each test
+        //Clear UserDefaults before each test
         UserDefaults.standard.removePersistentDomain(forName: Bundle.main.bundleIdentifier!)
     }
     
@@ -26,11 +26,13 @@ class InterestsRepositoryTests: XCTestCase {
         super.tearDown()
     }
     
+    //Test to load interets list if no data
     func testLoadSelectedInterests_WhenNoData_ReturnsEmptyArray() {
         let interests = interestsRepository.loadSelectedInterests()
         XCTAssertTrue(interests.isEmpty, "Expected no interests when UserDefaults is empty")
     }
     
+    //Test to save interets
     func testSaveSelectedInterests_SavesDataCorrectly() {
         let interests: [Name] = [Name(raw: "Interest1", key: "Q452718"), Name(raw: "Interest2", key: "Q345698")]
         interestsRepository.saveSelectedInterests(interests)
@@ -40,6 +42,7 @@ class InterestsRepositoryTests: XCTestCase {
         XCTAssertEqual(loadedInterests, interests, "Loaded interests do not match saved interests")
     }
     
+    //Test to clear interets and userdefaults
     func testClearSelectedInterests_ClearsUserDefaults() {
         let interests: [Name] = [Name(raw: "Interest1", key: "Q452718")]
         interestsRepository.saveSelectedInterests(interests)
@@ -50,11 +53,13 @@ class InterestsRepositoryTests: XCTestCase {
         XCTAssertTrue(loadedInterests.isEmpty, "Expected interests to be cleared from UserDefaults")
     }
     
+    //Test to save interets with successful request
     func testSaveCategoriesSelection_SuccessfulAPIRequest() {
         let expectation = self.expectation(description: "API call should succeed")
         
         let ids = ["1", "2", "3"]
-        mockHTTPManager.shouldFail = false // Simulate successful API call
+        // Simulate successful API call
+        mockHTTPManager.shouldFail = false
         
         interestsRepository.saveCategoriesSelection(ids: ids) { result in
             switch result {
@@ -69,11 +74,13 @@ class InterestsRepositoryTests: XCTestCase {
         waitForExpectations(timeout: 1.0, handler: nil)
     }
     
+    //Test to save interets with failure request
     func testSaveCategoriesSelection_FailedAPIRequest() {
         let expectation = self.expectation(description: "API call should fail")
         
         let ids = ["1", "2", "3"]
-        mockHTTPManager.shouldFail = true // Simulate failure in API call
+        // Simulate failure in API call
+        mockHTTPManager.shouldFail = true
         
         interestsRepository.saveCategoriesSelection(ids: ids) { result in
             switch result {

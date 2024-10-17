@@ -35,7 +35,7 @@ enum APIError: Error, Equatable {
 //Class for HTTP requests
 class HTTPmanager {
     
-    //Method to fetch data from API
+    //Fetch data from API
     func fetchData<T: Decodable>(from urlString: String, responseType: T.Type, completion: @escaping (Result<T, APIError>) -> Void) {
         
         Logger.info(message: LogType.info.logDescription + "\(urlString)")
@@ -76,7 +76,7 @@ class HTTPmanager {
         }.resume()
     }
     
-    //Method to send data to API
+    //Ssend data to API
     func sendIdsListToAPI<T: Encodable>(list: [T], to urlString: String, completion: @escaping (Result<Void, APIError>) -> Void) {
         
         Logger.info(message: LogType.info.logDescription + "\(urlString)")
@@ -88,7 +88,7 @@ class HTTPmanager {
         }
         
         var request = URLRequest(url: url)
-        request.httpMethod = "POST"
+        request.httpMethod = "PUT"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
         do {
